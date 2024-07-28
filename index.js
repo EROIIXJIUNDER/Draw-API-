@@ -1,11 +1,16 @@
+const express = require('express');
+const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+const indexPath = path.join(__dirname, 'tmp');
+const badWords = ["asmit"];
+
 app.get('/lado', (req, res) => {
   res.sendFile(indexPath);
 });
-
-
-
-
-const badWords = ["asmit"];
 
 app.get('/generate', async (req, res) => {
   const prompt = req.query.prompt;
@@ -48,7 +53,6 @@ app.get('/generate', async (req, res) => {
     const tmpDir = path.join(__dirname, 'tmp');
     const imagePath = path.join(tmpDir, `${Date.now()}.jpg`);
 
-    
     if (!fs.existsSync(tmpDir)) {
       fs.mkdirSync(tmpDir);
     }
@@ -68,4 +72,8 @@ app.get('/generate', async (req, res) => {
     console.error(error);
     res.status(500).send("Failed to generate the image. Please try again later.");
   }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
